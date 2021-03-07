@@ -1,0 +1,31 @@
+/*{
+  "author": "Jonathan Barrett",
+  "targets": ["omnifocus"],
+  "type": "action",
+  "identifier": "com.relativesanity.omnifocus.toggle-project-flag",
+  "version": "0.1",
+  "description": "A plug-in that toggles the flag status of a task's containing project, if it has one",
+  "label": "Toggle Project Flag",
+  "mediumLabel": "Toggle Project Flag",
+  "paletteLabel": "Toggle Project Flag",
+}*/
+(() => {
+  const action = new PlugIn.Action((selection) => {
+    const projects = [];
+    validObjects(selection).forEach((obj) => {
+      const project = obj.containingProject;
+      if ( !projects.includes(project) ) { projects.push(project) };
+    })
+    projects.forEach( project => project.flagged = !project.flagged );
+  });
+  
+  const validObjects = (selection) => {
+    return selection.tasks.filter( obj => obj.containingProject != null );
+  }
+  
+  action.validate = (selection) => {
+    return validObjects(selection).length > 0;
+  };
+  
+  return action;
+})();

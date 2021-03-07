@@ -1,0 +1,54 @@
+/*{
+  "author": "Jonathan Barrett",
+  "targets": ["omnifocus"],
+  "type": "action",
+  "identifier": "com.relativesanity.omnifocus.open-link",
+  "version": "0.1",
+  "description": "A plug-in that finds all URLs in the given notes and lets the user open one.",
+  "label": "Open Link",
+  "mediumLabel": "Open Link",
+  "paletteLabel": "Open Link",
+}*/
+(() => {
+  const action = new PlugIn.Action((selection) => {
+    const urls = urlsInSelection(selection);
+    if (urls.length == 1) { urls[0].open() }
+    else {
+      const urlStrings = [];
+      urls.map(u => u.string)
+        .forEach(u => {
+          if ( !urlStrings.includes(u) ) { urlStrings.push(u) }
+        });
+      const urlOptions = new Form.Field.Option('url', 'Link', urlStrings);
+      urlOptions.allowsNull = false;
+      urlOptions.nullOptionTitle = 'Choose a link';
+
+      const form = new Form();
+      form.addField(urlOptions)
+      form
+        .show(`Found ${urlStrings.length} links.`, 'Open')
+        .then((result) => { URL.fromString(result.values.url).open() });
+    }
+  });
+
+  action.validate = (selection) => {
+    return urlsInSelection(selection).length > 0;
+  };
+  
+  const urlsInSelection = (selection) => {
+    return selection.allObjects.map(o => o.note)
+      .filter(n => n != null)
+      .flatMap(n => urlsFromNote(n))
+      .filter(url => url != null)
+  };
+  
+  const urlsFromNote = (note) => {
+    if ( !note.includes("://") ) { return null }
+    const urlStrs = note.match(/[^<\s][^\s]+\/\/[^\s>]+/g);
+    let urls = urlStrs.map(urlStr => URL.fromString(urlStr));
+    if ( urls ) { return urls }
+    return null;
+  };
+      
+  return action;
+})();

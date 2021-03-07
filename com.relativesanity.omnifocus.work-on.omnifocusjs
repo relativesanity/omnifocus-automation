@@ -1,0 +1,44 @@
+/*{
+  "author": "Jonathan Barrett",
+  "targets": ["omnifocus"],
+  "type": "action",
+  "identifier": "com.relativesanity.omnifocus.work-on",
+  "version": "0.1",
+  "description": "A plug-in that adds a navigation task to a specific project.",
+  "label": "Work on",
+  "mediumLabel": "Work on",
+  "paletteLabel": "Work on",
+}*/
+(() => {
+  const prefix = "Work on: ";
+  const tagNames = ['Navigation', 'Next'];
+  const projectName = 'Navigation';
+
+  const action = new PlugIn.Action((selection) => {
+    const tags = tagNames.map(tagName => tagNamed(tagName));
+    const project = projectNamed(projectName);
+    selection.databaseObjects.forEach((item) => {
+      const newTask = new Task(prefix + item.name, project);
+      newTask.note = urlForItem(item);
+      newTask.addTags(tags);
+    })
+  });
+  
+  const urlForItem = (item) => {
+    switch (item.id.objectClass) {
+      case Project:
+      case Task:
+        var slug = "task";
+        break;
+      case Folder:
+        var slug = "folder";
+        break;
+      case Tag:
+        var slug = "tag";
+        break;
+    }
+    return 'omnifocus:///' + slug + '/' + item.id.primaryKey;
+  }
+      
+  return action;
+})();

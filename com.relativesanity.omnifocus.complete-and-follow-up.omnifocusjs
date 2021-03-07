@@ -1,0 +1,48 @@
+/*{
+  "author": "Jonathan Barrett",
+  "targets": ["omnifocus"],
+  "type": "action",
+  "identifier": "com.relativesanity.omnifocus.complete-and-follow-up",
+  "version": "0.1",
+  "description": "A plug-in that completes the selected task and creates a follow up",
+  "label": "Complete and Follow Up",
+  "mediumLabel": "Complete and Follow Up",
+  "paletteLabel": "Complete and Follow Up",
+}*/
+(() => {
+  const followUpTagName = 'Follow up…';
+  const followUpPrefix = 'Follow up: ';
+
+  const action = new PlugIn.Action((selection) => {
+    validObjects(selection).forEach((taskToComplete) => {
+      // for each task, make a duplicate, add it just after the existing task
+      const followUpTask = duplicateTasks([taskToComplete], taskToComplete.after)[0];
+      // add prefix to name
+      followUpTask.name = followUpPrefix + followUpTask.name;
+      // remove flags, defer and due dates
+      followUpTask.flagged = false;
+      followUpTask.deferDate = null;
+      followUpTask.dueDate = null;
+      // add the followUp tag
+      followUpTask.addTag(tagNamed(followUpTagName));
+      // and complete the initial task
+      taskToComplete.markComplete();
+    })
+  });
+  
+  const validObjects = (selection) => {
+    // we want tasks that are not complete, do not have the magic "follow up" tag, and if they have
+    // any children, those children are also complete
+    return selection.tasks.filter((task) => {
+      return !task.completed &&
+        !task.tags.some(tag => tag.name == followUpTagName) &&
+        (task.children.length == 0 || !task.children.some(child => !child.complete))
+    });
+  };
+
+  action.validate = (selection) => {
+    return validObjects(selection).length > 0;
+  };
+
+  return action;
+})();
