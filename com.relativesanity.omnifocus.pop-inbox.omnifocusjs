@@ -1,0 +1,23 @@
+/*{
+  "author": "Jonathan Barrett",
+  "targets": ["omnifocus"],
+  "type": "action",
+  "identifier": "com.relativesanity.omnifocus.pop-inbox",
+  "version": "0.1",
+  "description": "A plug-in that opens the inbox in a new window",
+  "label": "Pop Inbox",
+  "mediumLabel": "Pop Inbox",
+  "paletteLabel": "Pop Inbox",
+}*/
+(() => {
+  const action = new PlugIn.Action((selection) => {
+    document.newWindow()
+      .then((w) => w.perspective = Perspective.BuiltIn.Inbox);
+  });
+
+  action.validate = (selection) => {
+    return true;
+  };
+
+  return action;
+})();
