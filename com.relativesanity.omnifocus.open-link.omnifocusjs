@@ -8,6 +8,7 @@
   "label": "Open Link",
   "mediumLabel": "Open Link",
   "paletteLabel": "Open Link",
+  "image": "link.circle",
 }*/
 (() => {
   const action = new PlugIn.Action((selection) => {
@@ -34,14 +35,14 @@
   action.validate = (selection) => {
     return urlsInSelection(selection).length > 0;
   };
-  
+
   const urlsInSelection = (selection) => {
     return selection.allObjects.map(o => o.note)
       .filter(n => n != null)
       .flatMap(n => urlsFromNote(n))
       .filter(url => url != null)
   };
-  
+
   const urlsFromNote = (note) => {
     if ( !note.includes("://") ) { return null }
     const urlStrs = note.match(/[^<\s][^\s]+\/\/[^\s>]+/g);
@@ -49,6 +50,6 @@
     if ( urls ) { return urls }
     return null;
   };
-      
+
   return action;
 })();

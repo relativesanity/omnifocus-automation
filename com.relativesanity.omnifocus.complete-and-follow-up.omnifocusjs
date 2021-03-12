@@ -8,6 +8,7 @@
   "label": "Complete and Follow Up",
   "mediumLabel": "Complete and Follow Up",
   "paletteLabel": "Complete and Follow Up",
+  "image": "arrowshape.turn.up.left.circle",
 }*/
 (() => {
   const followUpTagName = 'Follow up…';
@@ -29,7 +30,7 @@
       taskToComplete.markComplete();
     })
   });
-  
+
   const validObjects = (selection) => {
     // we want tasks that are not complete, do not have the magic "follow up" tag, and if they have
     // any children, those children are also complete

@@ -8,6 +8,7 @@
   "label": "Work on",
   "mediumLabel": "Work on",
   "paletteLabel": "Work on",
+  "image": "location.circle",
 }*/
 (() => {
   const prefix = "Work on: ";
@@ -23,7 +24,7 @@
       newTask.addTags(tags);
     })
   });
-  
+
   const urlForItem = (item) => {
     switch (item.id.objectClass) {
       case Project:
@@ -39,6 +40,6 @@
     }
     return 'omnifocus:///' + slug + '/' + item.id.primaryKey;
   }
-      
+
   return action;
 })();

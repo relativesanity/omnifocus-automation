@@ -8,6 +8,7 @@
   "label": "Toggle Project Flag",
   "mediumLabel": "Toggle Project Flag",
   "paletteLabel": "Toggle Project Flag",
+  "image": "flag.circle",
 }*/
 (() => {
   const action = new PlugIn.Action((selection) => {
@@ -18,14 +19,14 @@
     })
     projects.forEach( project => project.flagged = !project.flagged );
   });
-  
+
   const validObjects = (selection) => {
     return selection.tasks.filter( obj => obj.containingProject != null );
   }
-  
+
   action.validate = (selection) => {
     return validObjects(selection).length > 0;
   };
-  
+
   return action;
 })();

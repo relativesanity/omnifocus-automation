@@ -8,6 +8,7 @@
   "label": "Pop Inbox",
   "mediumLabel": "Pop Inbox",
   "paletteLabel": "Pop Inbox",
+  "image": "tray.circle",
 }*/
 (() => {
   const action = new PlugIn.Action((selection) => {
